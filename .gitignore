@@ -1,0 +1,12 @@
+# Installed npm packages
+node_modules/
+
+# Environment variables and secrets
+.env
+
+# npm error logs
+npm-debug.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db
