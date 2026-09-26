@@ -15,7 +15,26 @@
 
   <main>
     <h2>Welcome to the Note-Taking App</h2>
-    <p>The front-end interface is working.</p>
+    <section class="auth-status">
+  <% if (isAuthenticated) { %>
+    <p>
+      Logged in as
+      <strong><%= user.name || user.email || user.nickname %></strong>
+    </p>
+
+    <nav>
+      <a href="/profile">View profile</a>
+      <a href="/logout">Log out</a>
+    </nav>
+  <% } else { %>
+    <p>Please sign in to create and manage your notes.</p>
+
+    <nav>
+      <a href="/signup">Sign up</a>
+      <a href="/login">Log in</a>
+    </nav>
+  <% } %>
+</section>
   </main>
 </body>
 </html>
