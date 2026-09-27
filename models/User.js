@@ -3,6 +3,13 @@ const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
+    auth0Id: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true
+    },
+
     name: {
       type: String,
       required: [true, "Name is required"],
@@ -20,9 +27,16 @@ const userSchema = new mongoose.Schema(
       match: [/^\S+@\S+\.\S+$/, "Please provide a valid email address"]
     },
 
+    picture: {
+      type: String,
+      default: null
+    },
+
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: function () {
+        return !this.auth0Id;
+      },
       minlength: [8, "Password must contain at least 8 characters"],
       select: false
     }
@@ -33,7 +47,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function () {
-  if (!this.isModified("password")) {
+  if (!this.password || !this.isModified("password")) {
     return;
   }
 

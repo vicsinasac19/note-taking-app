@@ -8,6 +8,7 @@ const { MongoStore } = require("connect-mongo");
 const { auth, requiresAuth } = require("express-openid-connect");
 const connectDatabase = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
+const syncAuth0User = require("./middleware/syncAuth0User");
 const app = express();
 
 connectDatabase();
@@ -51,6 +52,8 @@ app.use(
     issuerBaseURL: process.env.ISSUER_BASE_URL
   })
 );
+app.use(syncAuth0User);
+
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.oidc.isAuthenticated();
   res.locals.user = req.oidc.user || null;
