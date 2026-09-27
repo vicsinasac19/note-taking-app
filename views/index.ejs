@@ -15,26 +15,79 @@
 
   <main>
     <h2>Welcome to the Note-Taking App</h2>
+
     <section class="auth-status">
-  <% if (isAuthenticated) { %>
-    <p>
-      Logged in as
-      <strong><%= user.name || user.email || user.nickname %></strong>
-    </p>
+      <% if (isAuthenticated) { %>
+        <p>
+          Logged in as
+          <strong><%= user.name || user.email || user.nickname %></strong>
+        </p>
 
-    <nav>
-      <a href="/profile">View profile</a>
-      <a href="/logout">Log out</a>
-    </nav>
-  <% } else { %>
-    <p>Please sign in to create and manage your notes.</p>
+        <nav>
+          <a href="/profile">View profile</a>
+          <a href="/logout">Log out</a>
+        </nav>
+      <% } else { %>
+        <p>Please sign in to create and manage your notes.</p>
 
-    <nav>
-      <a href="/signup">Sign up</a>
-      <a href="/login">Log in</a>
-    </nav>
-  <% } %>
-</section>
+        <nav>
+          <a href="/signup">Sign up</a>
+          <a href="/login">Log in</a>
+        </nav>
+      <% } %>
+    </section>
+
+    <% if (isAuthenticated) { %>
+      <section class="create-note">
+        <h2 id="form-heading">Create a Note</h2>
+
+        <form id="note-form" action="/api/notes" method="POST">
+          <div>
+            <label for="title">Title</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              maxlength="100"
+              required
+            >
+          </div>
+
+          <div>
+            <label for="content">Note</label>
+            <textarea
+              id="content"
+              name="content"
+              rows="8"
+              maxlength="5000"
+              required
+            ></textarea>
+          </div>
+
+          <button id="save-note-button" type="submit">
+            Save Note
+          </button>
+
+          <button id="cancel-edit-button" type="button" hidden>
+            Cancel Edit
+          </button>
+        </form>
+
+        <p id="note-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="notes-section">
+        <h2>Your Notes</h2>
+
+        <div id="notes-list">
+          <p>Loading notes...</p>
+        </div>
+      </section>
+    <% } %>
   </main>
+
+  <% if (isAuthenticated) { %>
+    <script src="/js/notes.js" defer></script>
+  <% } %>
 </body>
 </html>

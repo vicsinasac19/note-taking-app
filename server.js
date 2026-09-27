@@ -10,6 +10,7 @@ const connectDatabase = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
 const syncAuth0User = require("./middleware/syncAuth0User");
 const app = express();
+const noteRoutes = require("./routes/noteRoutes");
 
 connectDatabase();
 
@@ -53,7 +54,7 @@ app.use(
   })
 );
 app.use(syncAuth0User);
-
+app.use("/api/notes", noteRoutes);
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.oidc.isAuthenticated();
   res.locals.user = req.oidc.user || null;
@@ -62,6 +63,7 @@ app.use((req, res, next) => {
 // Make files inside the public folder available to the browser
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth", authRoutes);
+
 
 // Sign-up route
 app.get("/signup", (req, res) => {
