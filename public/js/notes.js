@@ -25,7 +25,17 @@ async function apiRequest(url, options = {}) {
 
 function showMessage(text, isError = false) {
   message.textContent = text;
-  message.style.color = isError ? "darkred" : "darkgreen";
+
+  message.classList.remove(
+    "text-danger",
+    "text-success"
+  );
+
+  if (text) {
+    message.classList.add(
+      isError ? "text-danger" : "text-success"
+    );
+  }
 }
 
 function resetForm() {
@@ -81,7 +91,8 @@ function renderNotes(notes) {
   notesList.replaceChildren();
 
   if (notes.length === 0) {
-    const emptyMessage = document.createElement("p");
+    const emptyMessage = document.createElement("div");
+    emptyMessage.className = "alert alert-light border mb-0";
     emptyMessage.textContent = "You do not have any notes yet.";
     notesList.appendChild(emptyMessage);
     return;
@@ -89,20 +100,31 @@ function renderNotes(notes) {
 
   notes.forEach((note) => {
     const article = document.createElement("article");
-    article.className = "note-card";
+    article.className = "card border bg-body-tertiary";
+
+    const cardBody = document.createElement("div");
+    cardBody.className = "card-body";
 
     const heading = document.createElement("h3");
+    heading.className = "card-title h5";
     heading.textContent = note.title;
 
     const content = document.createElement("p");
+    content.className = "card-text text-body-secondary";
+    content.style.whiteSpace = "pre-wrap";
     content.textContent = note.content;
 
     const updated = document.createElement("small");
+    updated.className = "d-block text-body-secondary mb-3";
     updated.textContent =
       `Updated ${new Date(note.updatedAt).toLocaleString()}`;
 
+    const buttonGroup = document.createElement("div");
+    buttonGroup.className = "d-flex flex-wrap gap-2";
+
     const editButton = document.createElement("button");
     editButton.type = "button";
+    editButton.className = "btn btn-outline-primary btn-sm";
     editButton.textContent = "Edit";
     editButton.addEventListener("click", () => {
       beginEditing(note);
@@ -110,19 +132,25 @@ function renderNotes(notes) {
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
+    deleteButton.className = "btn btn-outline-danger btn-sm";
     deleteButton.textContent = "Delete";
     deleteButton.addEventListener("click", () => {
       deleteNote(note);
     });
 
-    article.append(
-      heading,
-      content,
-      updated,
+    buttonGroup.append(
       editButton,
       deleteButton
     );
 
+    cardBody.append(
+      heading,
+      content,
+      updated,
+      buttonGroup
+    );
+
+    article.appendChild(cardBody);
     notesList.appendChild(article);
   });
 }
